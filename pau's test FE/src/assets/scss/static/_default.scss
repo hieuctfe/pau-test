@@ -1,0 +1,24 @@
+
+.fa, .fab, .fal, .far, .fas{
+    &:before{
+        
+        display: inline-block;
+        vertical-align: top;
+        color: inherit;
+    }
+}
+a{
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+b, strong{
+    font-weight: bold;
+}
+.col{
+    &-20{
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}

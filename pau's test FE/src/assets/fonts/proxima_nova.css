@@ -1,0 +1,24 @@
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('Regular-webfont.eot');
+    src: url('Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('Regular-webfont.woff') format('woff'),
+         url('Regular-webfont.ttf') format('truetype'),
+         url('Regular-webfont.svg#proxima_nova_altregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('Semibold-webfont.eot');
+    src: url('Semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('Semibold-webfont.woff2') format('woff2'),
+         url('Semibold-webfont.ttf') format('truetype'),
+         url('Semibold-webfont.svg#proxima_nova_ltsemibold') format('svg');
+    font-weight: 500;
+    font-style: normal;
+
+}

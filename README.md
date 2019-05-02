@@ -1,7 +1,7 @@
 # pau-test
 
 
-# BE: Cofig connection in config/database
+# BE:Config connection in .env
 #    php artisan migrate:refresh --seed --force
 #    php artisan passport:install     
  

@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="col col-6">
-                <div class="form-container card">
+                <div class="form-container card" v-if="!verify_step">
                     <div class="login-form-header">
                         <div class="create-account-logo">
                             <div class="logo">
@@ -211,6 +211,12 @@
                         </div>
                     </form>
                 </div>
+                <div class="card" v-else>
+                    <otp_verify :email="form.email"
+                                @back_to_regis="verify_step = false"
+                                @verified="verify_success()"></otp_verify>
+                </div>
+
             </div>
         </div>
     </div>
@@ -219,6 +225,7 @@
 <script>
     import {required, minLength, maxLength, email, sameAs} from 'vuelidate/lib/validators'
     import VueTelInput from 'vue-tel-input';
+    import otp_verify from './otp_verify'
     import {mapActions} from 'vuex'
 
     export default {
@@ -242,10 +249,12 @@
                 server_message: {},
                 question_list: [],
                 formstate: false,
+                verify_step: false,
+                otp: ''
             }
         },
         components: {
-            VueTelInput,
+            VueTelInput, otp_verify
         },
         created: function () {
             this.getRegisterQuestion().then(res => {
@@ -258,7 +267,8 @@
         methods: {
             ...mapActions({
                 getRegisterQuestion: "$_Account/GET_USER_QUESTION_REGISTER",
-                registerAccount: "$_Account/REGISTER"
+                registerAccount: "$_Account/REGISTER",
+                generateOTP: "$_Account/GENERATE_OTP"
             }),
             regis_account() {
                 this.formstate = true
@@ -267,7 +277,18 @@
                     this.registerAccount(this.form).then(res => {
                         let {status, message, errors} = res.data
                         if (status) {
-                            this.$router.push({name: "Login"})
+                            // this.$router.push({name: "Login"})
+                            this.generateOTP(this.form.email).then(generate_res => {
+                                let {status, message} = generate_res.data
+                                if (status) {
+                                    this.verify_step = true
+                                } else {
+                                    $notify({
+                                        type: "danger",
+                                        content: "Have some trouble"
+                                    })
+                                }
+                            })
                         } else {
                             this.server_message = errors
                             for (let key in errors) {
@@ -284,8 +305,11 @@
                 }
             },
             onInput({number, isValid, country}) {
-                console.log(isValid);
                 this.is_phone_number_valid = isValid
+            },
+            verify_success() {
+                console.log('ahihi');
+                this.$router.push({name: "Login"})
             },
             isNumber: function (evt) {
                 evt = (evt) ? evt : window.event;

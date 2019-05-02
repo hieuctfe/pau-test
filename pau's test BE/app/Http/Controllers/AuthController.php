@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
-use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -73,8 +72,13 @@ class AuthController extends Controller
                 'message' => 'Unauthorized'
             ], 401);
         $user = $request->user();
-        return response()->json($user);
-        $tokenResult = $user->createToken('Personal Access Token');
+//        return response()->json($user);
+        try {
+            $tokenResult = $user->createToken('Personal Access Token');
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }
         $token = $tokenResult->token;
         if ($request->remember_me)
             $token->expires_at = Carbon::now()->setSeconds(3600);
@@ -108,20 +112,17 @@ class AuthController extends Controller
 
     public function verifyAccount(Request $request)
     {
+        $response = array();
         $userId = $request->email;
         $users = User::where('email', $userId)->first();
         if ($users == "" || $users == null) {
             $response['status'] = false;
             $response['message'] = 'OTP is not valid';
         } else {
-            $OTP = $request->session()->get('OTP');
+            $OTP = $users->otp;
             $enteredOtp = $request->otp;
-            if ($OTP === $enteredOtp) {
+            if ($OTP == $enteredOtp) {
                 User::where('email', $userId)->update(['is_verified' => 1]);
-
-                //Removing Session variable
-                Session::forget('OTP');
-
                 $response['status'] = true;
                 $response['message'] = "this account is verified";
             } else {
@@ -129,6 +130,7 @@ class AuthController extends Controller
                 $response['message'] = "OTP is incorrect";
             }
         }
+        return response()->json($response, 200);
     }
 
     public function sendOtp(Request $request)
@@ -148,10 +150,9 @@ class AuthController extends Controller
                 $response['status'] = false;
                 $response['message'] = $msg91Response['message'];
             } else {
-                Session::put('OTP', $otp);
+                User::where('email', $userId)->update(['otp' => $otp]);
                 $response['message'] = 'Your OTP is created.';
                 $response['status'] = true;
-//                $response['OTP'] = $otp;
             }
         }
         return response()->json($response, 200);

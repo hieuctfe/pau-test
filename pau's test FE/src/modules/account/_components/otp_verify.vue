@@ -7,20 +7,21 @@
             </span>
             <p class="otp-title">Verify OTP</p>
         </div>
-        <div class="otp-body">
-            <form @submit.stop.prevent="verify_otp()">
+        <form @submit.stop.prevent="verify_otp">
+            <div class="otp-body">
+
                 <img src="../../../assets/images/login/otp.png" alt="" class="m-b-25">
                 <p class="m-b-20">Verify OTP Code to continue</p>
                 <div class="form-group">
                     <input type="text" v-model="client_otp"
                            :class="{ 'is-invalid' : !is_otp_valid}"
-                           class="text-center otp-input m-b-20" name="type-group">
+                           class="form-control text-center otp-input m-b-20" name="type-group">
                     <small class="form-text invalid-feedback">OTP length must be 4</small>
                 </div>
                 <small class="text-danger" v-if="otp_incorrect">Your OTP is incorrect</small>
-                <button class="btn otp-submit-button">Continue</button>
-            </form>
-        </div>
+                <button class="btn otp-submit-button" type="submit">Continue</button>
+            </div>
+        </form>
         <div class="otp-footer text-center">
             <p class="m-b-10">Resend OTP code</p>
             <button class="btn btn-resend" @click="resend_otp">Resend</button>
@@ -40,15 +41,14 @@
                 generateOTP: "$_Account/GENERATE_OTP"
             }),
             back_to_regis() {
-              this.$emit('back_to_regis')
+                this.$emit('back_to_regis')
             },
             verify_otp() {
-                this.is_otp_valid = this.client_otp.length != 4
+                this.is_otp_valid = this.client_otp.length == 4
                 if (this.is_otp_valid) {
-                    //verify OTP here
-                    // if (this.is_otp_valid == this.otp) {
                     this.verifyAccount({email: this.email, otp: this.client_otp}).then(res => {
                         let {status, message} = res.data
+                        console.log(res);
                         if (status) {
                             this.$emit('verified');
                         } else {
@@ -115,6 +115,7 @@
             .otp-input {
                 width: 345px;
                 height: 40px;
+                margin: auto;
             }
             .otp-submit-button {
                 width: 150px;

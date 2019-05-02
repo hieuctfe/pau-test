@@ -24,7 +24,6 @@ router.beforeEach(async function (to, from, next) {
     var isLoggedIn = store.getters['$_Account/isLoggedIn']
     store.commit('setRouter', to)
     store.commit('setPreviousRouter', from)
-    console.log(to)
     if (to.matched.some(record => record.meta.requiresAuth) && to.meta.requiresAuth != false) {
         if (isLoggedIn) {
             var user = store.getters['$_Account/getUser']

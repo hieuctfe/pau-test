@@ -26,6 +26,8 @@ class CreateUsersTable extends Migration
             $table->string('content_option')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->boolean('is_verified');
+
 
             $table->foreign('question_id')->references('id')->on('questions');
         });

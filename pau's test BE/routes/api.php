@@ -22,6 +22,8 @@ Route::group([
 ], function () {
     Route::post('login', 'AuthController@login');
     Route::post('register', 'AuthController@register');
+    Route::post('sendOtp', 'AuthController@sendOtp');
+    Route::post('verifyAccount', 'AuthController@verifyAccount');
     Route::get('loadquestion', 'AuthController@loadQuestion');
 
     Route::group([

@@ -7,7 +7,7 @@ export default {
                 //     commit('LOGIN_SUCCESS', data.token)
                 // }
                 reslove(res)
-            }, (error) =>{
+            }, (error) => {
                 reject(error)
             })
         })
@@ -27,7 +27,6 @@ export default {
         commit('LOGOUT_SUCCESS')
     },
     GET_USER_INFO({commit}) {
-        console.log('goi moi info');
         return new Promise((resolve, reject) => {
             axios.get(`/api/auth/user`).then(res => {
                 resolve(res)
@@ -41,5 +40,13 @@ export default {
     },
     async GET_USER_QUESTION_REGISTER({commit}) {
         return await axios.get(`/api/auth/loadquestion`)
+    },
+
+    async GENERATE_OTP({commit}, email) {
+        return await axios.post(`/api/auth/sendOtp`, {email: email})
+    },
+
+    async VERIFY_ACCOUNT({commit}, verify_info) {
+        return await axios.post(`/api/auth/verifyAccount`, verify_info)
     }
 }
